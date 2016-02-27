@@ -1,0 +1,126 @@
+""""""""""""""""""""""""""""""""
+" Detecting the Operating system
+""""""""""""""""""""""""""""""""
+
+if !exists("g:os")
+    if has("win64") || has("win32") || has("win16")
+        let g:os = "Windows"
+    elseif has("unix")
+        let g:os = "Unix"
+    else
+        let g:os = "unknown"
+    endif
+endif
+
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+if g:os == "Windows"
+    set rtp+=$HOME/vimfiles/bundle/Vundle.vim/
+    call vundle#begin('$USERPROFILE/vimfiles/bundle/')
+else
+    set rtp+=~/.vim/bundle/Vundle.vim
+    call vundle#begin()
+endif
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" The following are examples of different formats supported.
+" Keep Plugin commands between vundle#begin/end.
+" plugin on GitHub repo
+Plugin 'tpope/vim-fugitive'
+
+" Custom plugins added here
+Plugin 'altercation/vim-colors-solarized.git'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+"
+if g:os == "Windows"
+    source $VIMRUNTIME/mswin.vim
+endif
+
+
+set history=999
+set title  " change the terminal's title
+set nobackup " Don't create a backup file
+set noswapfile " Don't create a swap file
+
+""""""""""""""""""
+" Colors and fonts 
+""""""""""""""""""
+syntax on
+
+colorscheme solarized
+set background=dark
+if has("gui_running")
+    set guifont=Inconsolata-g\ Medium\ 10,Oxygen\ Mono:h10,DejaVu\ Sans\ Mono:h13,Droid\ Sans\ Mono:h10,Consolas:h11
+    set guioptions-=T
+    set guioptions+=e
+    set t_Co=256
+    set guitablabel=%M\ %t
+endif
+
+""""""""""""""""""""""
+" Search and highlight
+""""""""""""""""""""""
+set ignorecase " Ignore case when searching
+set smartcase " When searching try to be smart about cases 
+set hlsearch " Highlight search results
+set incsearch " Makes search act like search in modern browsers
+" F4 to toggle highlighting
+let hlstate=0
+nnoremap <F4> :if (hlstate%2 == 0) \| nohlsearch \| else \| set hlsearch \|endif \| let hlstate=hlstate+1<cr>
+set lazyredraw " Don't redraw while executing macros (good performance config)
+set magic " For regular expressions turn magic on
+set showmatch " Show matching brackets when text indicator is over them
+set mat=2 " How many tenths of a second to blink when matching brackets
+
+""""""""""""""""
+" User interface
+""""""""""""""""
+set laststatus=2 "Always show statusline
+set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \Line:\%l\ of\ %L\ Col:\ %c%V\ (%P) "Format the statusline
+" set statusline=%<\ %n:%f\ %m%r%y%=%-35.(line:\ %l\ of\ %L,\ col:\ %c%V\ (%P)%)
+set ruler "Always show current position
+set cmdheight=1 " Height of the command bar
+set wildmenu " Turn on the WiLd menu
+set wildmode=longest:list,full
+set nowrap " Don't wrap around lines
+set backspace=indent,eol,start " Allow backspacing over everything in insert mode
+""""""""""""""""""
+" Tabs and related
+""""""""""""""""""
+set expandtab " Use spaces instead of tabs
+set smarttab " Be smart when using tabs ;)
+set shiftwidth=4 " 1 tab == 4 spaces
+set tabstop=4 " 1 tab == 4 spaces
+set ai "Auto indent
+set si "Smart indent
+
+""""""""""""""""""
+" Helper functions
+""""""""""""""""""
+" Returns true if paste mode is enabled
+function! HasPaste()
+    if &paste
+        return 'PASTE MODE  '
+    en
+    return ''
+endfunction
